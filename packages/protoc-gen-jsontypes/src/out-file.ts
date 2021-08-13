@@ -1,0 +1,55 @@
+import {
+    DescriptorRegistry,
+    FileDescriptorProto,
+    FileDescriptorProtoFields,
+    GeneratedFile,
+    TypescriptFile,
+} from "@protobuf-ts/plugin-framework";
+
+
+/**
+ * A protobuf-ts output file.
+ */
+export class OutFile extends TypescriptFile implements GeneratedFile {
+
+
+    constructor(
+        name: string,
+        public readonly fileDescriptor: FileDescriptorProto,
+        private readonly registry: DescriptorRegistry,
+        private readonly pluginCredit: string,
+    ) {
+        super(name);
+    }
+
+
+    getContent(): string {
+        if (this.isEmpty()) {
+            return "";
+        }
+        let props = [];
+        if (this.fileDescriptor.package) {
+            props.push('package "' + this.fileDescriptor.package + '"');
+        }
+        props.push('syntax ' + (this.fileDescriptor.syntax ?? 'proto2'));
+        let header = [
+            `// @generated ${this.pluginCredit}`,
+            `// @generated from protobuf file "${this.fileDescriptor.name}" (${props.join(', ')})`,
+            `// tslint:disable`
+        ];
+        if (this.registry.isExplicitlyDeclaredDeprecated(this.fileDescriptor)) {
+            header.push('// @deprecated');
+        }
+        [
+            ...this.registry.sourceCodeComments(this.fileDescriptor, FileDescriptorProtoFields.syntax).leadingDetached,
+            ...this.registry.sourceCodeComments(this.fileDescriptor, FileDescriptorProtoFields.package).leadingDetached
+        ].every(block => header.push('//', ...block.split('\n').map(l => '//' + l), '//'));
+        let head = header.join('\n');
+        if (head.length > 0 && !head.endsWith('\n')) {
+            head += '\n';
+        }
+        return head + super.getContent();
+    }
+
+
+}

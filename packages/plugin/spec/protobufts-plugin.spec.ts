@@ -64,6 +64,16 @@ describe('protobuftsPlugin', function () {
         const
             compilerOptions: ts.CompilerOptions = {
                 strict: true,
+                noUnusedParameters: true,
+                noFallthroughCasesInSwitch: true,
+                noImplicitReturns: true,
+                noImplicitAny: true,
+                strictBindCallApply: true,
+                strictNullChecks: true,
+                strictFunctionTypes: true,
+                noImplicitThis: true,
+                noUnusedLocals: true,
+
                 skipLibCheck: false,
                 forceConsistentCasingInFileNames: true,
 

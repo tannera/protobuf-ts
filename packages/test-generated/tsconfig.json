@@ -20,8 +20,17 @@
     // svelte requires this option
     "importsNotUsedAsValues": "error",
 
-
     "strict": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noImplicitAny": true,
+    "strictBindCallApply": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+
     "lib": [
       "es2017",
       "dom",
